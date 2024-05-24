@@ -3,9 +3,13 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Put,
+  UseFilters,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,6 +17,7 @@ import { ITask } from '@src/task/task.interface';
 import { TaskService } from '@src/task/task.service';
 import { CreateTaskDto } from '@src/task/dto/create-task.dto';
 import { UpdateTaskDto } from '@src/task/dto/update-task.dto';
+import { EmailPipe } from '@src/task/pipes/email.pipe';
 
 @Controller('task')
 export class TaskController {
@@ -24,7 +29,7 @@ export class TaskController {
   }
 
   @Get(':id')
-  getTaskById(@Param('id') id: string): ITask {
+  getTaskById(@Param('id', ParseIntPipe) id: number): ITask {
     return this.taskService.getTaskById(id);
   }
 
@@ -35,16 +40,21 @@ export class TaskController {
   }
 
   @Delete(':id')
-  deleteTask(@Param('id') id: string): string {
+  deleteTask(@Param('id', ParseIntPipe) id: number): string {
     return this.taskService.deleteTask(id);
   }
 
   @UsePipes(new ValidationPipe())
   @Put(':id')
   updateTask(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateTaskDto: UpdateTaskDto,
   ): ITask {
     return this.taskService.updateTask(id, updateTaskDto);
+  }
+
+  @Get('email/:email')
+  getTasksByEmail(@Param('email', EmailPipe) email: string): ITask[] {
+    return this.taskService.getTasksByEmail(email);
   }
 }

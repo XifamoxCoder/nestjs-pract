@@ -1,6 +1,7 @@
 import { Status } from '@src/task/task.interface';
 import {
   ArrayNotEmpty,
+  IsEmail,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -19,4 +20,8 @@ export class CreateTaskDto {
   @IsOptional()
   @IsEnum(Status, { message: 'Не верный тип статуса' })
   status?: Status;
+
+  @IsOptional()
+  @IsEmail({}, { message: 'Некорректный email' })
+  email: string;
 }

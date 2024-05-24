@@ -11,6 +11,7 @@ export interface ITask {
   task: string;
   status?: Status;
   tags?: string[];
+  email?: string;
   createdAt: Date;
   updatedAt: Date | string | number;
 }
